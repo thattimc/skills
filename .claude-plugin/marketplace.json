@@ -1,0 +1,18 @@
+{
+  "name": "thattimc",
+  "owner": {
+    "name": "thattimc",
+    "url": "https://github.com/thattimc"
+  },
+  "metadata": {
+    "description": "Tim's shared Claude Code skills.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "tim-skills",
+      "source": "./",
+      "description": "Domain-name search and SSR synthetic market research skills."
+    }
+  ]
+}

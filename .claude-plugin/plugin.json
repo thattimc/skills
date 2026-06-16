@@ -1,0 +1,11 @@
+{
+  "name": "tim-skills",
+  "version": "0.1.0",
+  "description": "Two Claude Code skills: domain-search (check domain availability + brainstorm brandable names) and ssr-market-research (LLM-simulated market research via Semantic Similarity Rating).",
+  "author": {
+    "name": "thattimc",
+    "url": "https://github.com/thattimc"
+  },
+  "homepage": "https://github.com/thattimc/skills",
+  "license": "MIT"
+}

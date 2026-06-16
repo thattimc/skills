@@ -1,0 +1,55 @@
+{
+  "scale": [1, 2, 3, 4, 5],
+  "labels": {
+    "1": "Would never adopt / no value",
+    "2": "Unlikely to adopt",
+    "3": "Uncertain / on the fence",
+    "4": "Likely to adopt and pay",
+    "5": "Must-have / would pay a premium now"
+  },
+  "_note": "6 stylistically varied, domain-independent anchor sets capturing different ways people express adoption / willingness-to-pay intent. Generic by design so they apply to any product concept.",
+  "sets": [
+    {
+      "1": "I would never use this; it has no value for me.",
+      "2": "I probably wouldn't use this; it doesn't seem worth it.",
+      "3": "I'm not sure; I might try it but I have no strong feelings either way.",
+      "4": "I would likely use this; it seems genuinely useful to me.",
+      "5": "I would absolutely use this and happily pay for it right away."
+    },
+    {
+      "1": "This solves no problem I actually have.",
+      "2": "This is a minor convenience at best, not worth switching for.",
+      "3": "This could be handy once in a while, but I'd have to see.",
+      "4": "This would clearly save me real time and effort.",
+      "5": "This would transform how I work; I need it now."
+    },
+    {
+      "1": "Honestly this sounds useless and kind of annoying.",
+      "2": "I'm pretty skeptical this would actually help me.",
+      "3": "It's interesting, but I'm genuinely on the fence about it.",
+      "4": "I'm genuinely excited about this idea.",
+      "5": "I'm thrilled, this is exactly what I've been wishing for."
+    },
+    {
+      "1": "I wouldn't use this even if it were completely free.",
+      "2": "I'd only ever consider it if it were free.",
+      "3": "I might pay a little, but only after it proves itself.",
+      "4": "I'd pay a monthly subscription for this.",
+      "5": "I'd pay a premium price for this without hesitation."
+    },
+    {
+      "1": "I would uninstall this immediately.",
+      "2": "I'd try it once and then probably abandon it.",
+      "3": "I'd keep it around and use it now and then.",
+      "4": "I'd make this part of my daily workflow.",
+      "5": "I'd build my whole workflow around this and never go back."
+    },
+    {
+      "1": "I'd actively warn other people away from this.",
+      "2": "I wouldn't bother mentioning it to anyone.",
+      "3": "I might mention it if it happened to come up.",
+      "4": "I'd recommend this to colleagues.",
+      "5": "I'd evangelize this to everyone I know."
+    }
+  ]
+}
