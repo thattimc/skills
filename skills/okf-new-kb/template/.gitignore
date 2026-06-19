@@ -1,0 +1,17 @@
+# Obsidian per-machine state (app.json / core-plugins.json / templates.json stay tracked)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/cache
+.trash/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Lint/export artifacts
+wiki-bundle.tgz

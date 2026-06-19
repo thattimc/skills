@@ -1,0 +1,10 @@
+{
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative",
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "wiki/assets",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "wiki",
+  "showUnsupportedFiles": true,
+  "promptDelete": true
+}

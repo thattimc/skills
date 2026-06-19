@@ -1,7 +1,7 @@
 {
   "name": "tim-skills",
-  "version": "0.1.0",
-  "description": "Two Claude Code skills: domain-search (check domain availability + brainstorm brandable names) and ssr-market-research (LLM-simulated market research via Semantic Similarity Rating).",
+  "version": "0.2.0",
+  "description": "Claude Code skills for naming, market research, and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
   "author": {
     "name": "thattimc",
     "url": "https://github.com/thattimc"
