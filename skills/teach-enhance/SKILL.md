@@ -1,77 +1,87 @@
 ---
 name: teach-enhance
 description: >
-  Layer the polished reading + media experience onto a course built with the /teach skill:
-  a local neural read-aloud button (Kokoro-82M, in-browser) with word-highlighting and a
-  voice/speed picker, ADHD-friendly reading aids (scroll progress bar, focus mode, read-time,
+  Teach a topic over multiple sessions AND ship it as a polished, self-hosted HTML course in
+  one command — no separate /teach call. Runs the full teaching methodology (mission-first
+  grounding, a stateful workspace of lessons + glossary + reference cards + learning records,
+  zone-of-proximal-development pacing) and produces every lesson with the enhanced experience
+  baked in: a local neural read-aloud button (Kokoro-82M, in-browser) with word-highlighting
+  and a voice/speed picker, ADHD-friendly reading aids (progress bar, focus mode, read-time,
   glossary tooltips, mobile-safe tables, on-this-page TOC), offline syntax highlighting, a
-  unified inline-SVG diagram kit with light/dark theming, and content-design patterns (TL;DR
-  box, mid-lesson "Quick check" + end "Retrieval check", labeled Worked examples, Recap box).
-  Use AFTER /teach has produced lessons/*.html + assets/course.css. Triggers: "enhance my teach
-  course", "add the speak/read-aloud button", "polish the lessons", "make the diagrams a set",
-  "add focus mode / progress bar / TL;DR / recap", "apply the course design system".
+  unified light/dark inline-SVG diagram kit, and content-design patterns (TL;DR box, mid-lesson
+  Quick check + end Retrieval check, labeled Worked examples, Recap box). Triggers: "teach me
+  X", "build a course on X", "I want to learn X over time", "make me lessons on …", plus
+  "enhance / polish my course", "add the read-aloud button / focus mode / TL;DR".
+disable-model-invocation: true
+argument-hint: "What would you like to learn or build a course on?"
 ---
 
 # Teach Enhance
 
-A reusable polish layer for `/teach` courses. `/teach` produces the pedagogy (lessons, glossary,
-references); this skill adds the **experience** — read-aloud, reading aids, syntax highlighting,
-a unified diagram system, and the per-lesson content patterns — so any course gets the same
-fine-tuned feel. Everything is vanilla CSS + dependency-free JS that works offline.
+The teaching skill **with the polished experience built in**. `/teach-enhance` is a superset of
+`/teach`: it runs the same multi-session teaching methodology, but every lesson it produces
+already ships with the read-aloud voice, reading aids, unified diagrams, and content patterns —
+so you only ever call this one command.
 
-## When to use
-- A `/teach` workspace already exists (`lessons/*.html`, `assets/course.css`).
-- You want the read-aloud button, focus mode, progress bar, glossary tooltips, consistent
-  diagrams, TL;DR/recap/worked-example structure, or the whole package.
+It has two halves, applied together:
 
-Do **not** use it to author lesson *content* — that's `/teach`. This is the presentation layer.
+## 1 — Teach (the methodology)
+The pedagogy is the bundled `/teach` method (by Matt Pocock, MIT — see
+`references/teach-method/NOTICE.md`). **Read `references/teach-method/teach-method.md` first**,
+plus the format files it points to (`MISSION-FORMAT.md`, `RESOURCES-FORMAT.md`,
+`LEARNING-RECORD-FORMAT.md`, `GLOSSARY-FORMAT.md`). In short:
 
-## What it adds
-- **Read-aloud (`speak.js`)** — local neural voice (Kokoro-82M) in the browser; floating 🔊
-  control with a voice + speed gear menu; highlights the current block and word as it reads;
-  falls back to the OS voice offline.
-- **Reading aids (`reading.js`, `content.js`)** — top progress bar, `~N min` read-time, a
-  focus mode that dims all but the current line, glossary tooltips on first term use,
-  mobile-safe table scroll, and an "On this page" contents on longer lessons.
-- **Syntax highlighting (`highlight.min.js` + `code-highlight.js`)** — palette-matched, offline.
-- **Unified diagrams** — one inline-SVG kit (gradient tints, 52px boxes, curved connectors,
-  one arrowhead) that theme to light/dark. See `references/diagram-kit.md`.
-- **Content patterns** — TL;DR box, mid-lesson Quick check + end Retrieval check, labeled
-  Worked examples, Recap box. See `references/content-patterns.md`.
+- Treat the current directory as a **stateful teaching workspace**. Ground everything in
+  `MISSION.md` (the real reason the user is learning) — interview first if it's unclear.
+- Gather knowledge from **trusted sources** into `RESOURCES.md`; never teach from parametric
+  guesses. Cite liberally.
+- Produce short, self-contained **lessons** in `lessons/NNNN-slug.html`, each a single tangible
+  win in the user's zone of proximal development. Maintain `GLOSSARY.md` (controlled vocabulary),
+  printable reference cards in `reference/`, and `learning-records/` (ADRs for what was learned).
+- Reuse components from `assets/`; lessons should look like one course, not a pile of one-offs.
 
-## How to apply
-1. **Wire in the components** (idempotent):
-   ```bash
-   python3 scripts/apply.py /path/to/teach-workspace      # defaults to cwd
-   ```
-   This copies the JS components into `assets/`, copies `course.css` if you have none (else
-   leave yours and merge the enhance layers), vendors `highlight.min.js`, and adds the
-   `<script>` includes before `</body>` in every `lessons/*.html`.
-2. **Adopt the design system** — if the workspace already had a `course.css`, merge in the
-   enhance layers from this skill's `assets/course.css` (read-aloud, reading aids, code theme,
-   diagram polish + dark recolor, `.tldr` / `.recap` / `.worked-label` / `.gloss` / `.table-wrap`
-   / `.toc`). It assumes the base palette variables — see `references/content-patterns.md`.
-3. **Tune the glossary tooltips** — edit the `DEFS` map at the top of `assets/content.js` to the
-   course's actual terms + one-line definitions.
-4. **Apply the content patterns per lesson** — add the TL;DR box, move one quiz mid-lesson,
-   label the worked example, add the Recap, and (re)draw diagrams with the kit. For a whole
-   course this is best done as a small per-lesson workflow; the two `references/` files are the
-   exact specs to give each agent.
+## 2 — Enhance (baked into every lesson)
+Don't bolt the experience on at the end — build lessons in the enhanced house style from the
+start, using this skill's assets and specs:
+
+- **Design system & components.** Link `assets/course.css` (the full design system) and include
+  the JS components (`quiz.js`, `speak.js`, `reading.js`, `content.js`, `code-highlight.js`).
+  Wire them with `scripts/apply.py` (idempotent — also vendors `highlight.min.js`).
+- **Lesson skeleton & content patterns** — `references/content-patterns.md`: masthead · eyebrow
+  (+phase chip) · h1 · subtitle · lead · **TL;DR box** · sections with callouts · a **diagram** ·
+  a labeled **Worked example** · a **mid-lesson Quick check** + an **end Retrieval check** ·
+  a **Recap box** · footer (source callout · "Ask your teacher" · ref-list · pager).
+- **Diagrams** — `references/diagram-kit.md`: one inline-SVG kit (gradient tints, 52px boxes,
+  curved connectors, one arrowhead) that themes to light/dark automatically.
+- **For free at runtime:** the 🔊 local neural read-aloud (with word highlighting + voice/speed
+  picker), the scroll progress bar, focus mode, read-time, glossary tooltips, mobile table
+  scroll, on-this-page TOC, and palette-matched syntax highlighting.
+
+## Workflow
+1. **Mission.** Establish/confirm `MISSION.md` (interview if needed). Set up the workspace.
+2. **Sources.** Populate `RESOURCES.md` with high-trust references; ground all claims there.
+3. **Lessons.** Build each lesson in the enhanced skeleton (patterns above), in the user's ZPD,
+   with two quizzes (mid + end), a worked example, a kit diagram, a TL;DR, and a recap. Keep the
+   glossary, reference cards, and learning records current.
+4. **Wire the experience.** Run `python3 scripts/apply.py <workspace>` to copy components, add the
+   script includes to every `lessons/*.html`, and vendor the highlighter. (If the workspace
+   already has a `course.css`, merge in the enhance layers from this skill's `assets/course.css`.)
 5. **Serve over http** (not `file://`) so the neural voice can fetch its model:
-   `python3 -m http.server 8137 --directory /path/to/teach-workspace`.
+   `python3 -m http.server 8137 --directory <workspace>` and open a lesson.
+6. **Tune** the glossary tooltips: edit the `DEFS` map at the top of `assets/content.js`.
 
 ## Files
-- `assets/` — `course.css` (full design system), `quiz.js`, `speak.js`, `reading.js`,
+- `assets/` — `course.css` (full design system) + `quiz.js`, `speak.js`, `reading.js`,
   `content.js`, `code-highlight.js`. (`highlight.min.js` is vendored by `apply.py`.)
-- `scripts/apply.py` — wires the bundle into a workspace.
-- `references/diagram-kit.md` — the unified inline-SVG kit (colours/ids the dark mode keys off).
+- `scripts/apply.py` — wires the components into a workspace.
+- `references/teach-method/` — the bundled `/teach` methodology + format files (MIT; see NOTICE).
 - `references/content-patterns.md` — the per-lesson skeleton + every class the JS expects.
+- `references/diagram-kit.md` — the unified inline-SVG kit (colours/ids the dark mode keys off).
 
 ## Caveats
-- **Kokoro download:** the neural voice fetches an ~80 MB model on first use (cached after);
-  best on Chrome/WebGPU, slower on Safari/WASM. Offline or `file://` → it falls back to the OS
-  voice automatically.
-- **Dark-mode diagrams** recolor via CSS attribute selectors keyed to the kit's exact hexes and
-  `url(#g…)` gradient ids — diagrams that stray from the kit won't adapt. Keep to `diagram-kit.md`.
-- The components are markup-driven; if you change the lesson class names, update the selectors
-  in the JS to match.
+- **Kokoro read-aloud** downloads an ~80 MB model on first use (cached after); best on
+  Chrome/WebGPU, slower on Safari/WASM; offline or `file://` → it falls back to the OS voice.
+- **Dark-mode diagrams** recolor via CSS attribute selectors keyed to the kit's exact colours/ids
+  — keep diagrams to `diagram-kit.md` or they won't adapt.
+- The components are markup-driven; if you rename lesson classes, update the JS selectors.
+- This skill is **user-invoked** (`/teach-enhance`); it does not auto-trigger.
