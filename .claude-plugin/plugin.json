@@ -1,7 +1,7 @@
 {
   "name": "tim-skills",
-  "version": "0.3.1",
-  "description": "Claude Code skills for naming, market research, teaching + polished course production (teach-enhance: a self-contained /teach with read-aloud, reading aids, unified diagrams, content patterns), and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, teach-enhance, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
+  "version": "0.4.0",
+  "description": "Claude Code skills for naming, market research, public-X research, teaching + polished course production (teach-enhance: a self-contained /teach with read-aloud, reading aids, unified diagrams, content patterns), and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, xquik-x-research, teach-enhance, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
   "author": {
     "name": "thattimc",
     "url": "https://github.com/thattimc"
