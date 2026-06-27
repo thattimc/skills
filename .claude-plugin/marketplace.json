@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Tim's shared Claude Code skills.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "tim-skills",
       "source": "./",
-      "description": "Skills for domain-name search, SSR synthetic market research, and Open Knowledge Format (OKF) knowledge bases (scaffold, ingest, query, lint)."
+      "description": "Skills for domain-name search, SSR synthetic market research, enhancing /teach courses (read-aloud, reading aids, unified diagrams, content patterns), and Open Knowledge Format (OKF) knowledge bases (scaffold, ingest, query, lint)."
     }
   ]
 }

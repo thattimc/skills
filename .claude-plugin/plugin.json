@@ -1,7 +1,7 @@
 {
   "name": "tim-skills",
-  "version": "0.2.0",
-  "description": "Claude Code skills for naming, market research, and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
+  "version": "0.3.0",
+  "description": "Claude Code skills for naming, market research, course enhancement, and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, teach-enhance, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
   "author": {
     "name": "thattimc",
     "url": "https://github.com/thattimc"
