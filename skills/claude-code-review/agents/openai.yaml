@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Code Review"
+  short_description: "Independent Claude review for Codex changes"
+  default_prompt: "Use $claude-code-review to review this branch against main and verify every finding."
