@@ -1,7 +1,7 @@
 {
   "name": "tim-skills",
-  "version": "0.5.0",
-  "description": "Claude Code skills for naming, market research, public-X research, ROM ballpark estimates for custom enterprise applications (ballpark-estimate, priced with a private iRate rate card), independent cross-model code review (claude-code-review, through Claude Code), teaching + polished course production (teach-enhance: a self-contained /teach with read-aloud, reading aids, unified diagrams, content patterns), and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, xquik-x-research, ballpark-estimate, claude-code-review, teach-enhance, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
+  "version": "0.5.1",
+  "description": "Claude Code skills for naming, market research, public-X research, independent cross-model code review (claude-code-review, through Claude Code), teaching + polished course production (teach-enhance: a self-contained /teach with read-aloud, reading aids, unified diagrams, content patterns), and Open Knowledge Format (OKF) knowledge bases: domain-search, ssr-market-research, xquik-x-research, claude-code-review, teach-enhance, and the OKF family (okf-new-kb, okf-ingest, okf-query, okf-lint).",
   "author": {
     "name": "thattimc",
     "url": "https://github.com/thattimc"
