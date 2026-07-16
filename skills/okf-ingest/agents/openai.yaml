@@ -1,0 +1,3 @@
+interface:
+  display_name: "OKF Ingest"
+  short_description: "Add verified sources to an OKF knowledge base"
