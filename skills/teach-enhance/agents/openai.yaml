@@ -1,0 +1,5 @@
+interface:
+  display_name: "Teach Enhance"
+  short_description: "Teach a topic and publish a polished HTML course"
+policy:
+  allow_implicit_invocation: false
