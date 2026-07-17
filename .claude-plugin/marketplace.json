@@ -12,7 +12,7 @@
     {
       "name": "tim-skills",
       "source": "./",
-      "description": "Skills for domain-name search, SSR synthetic market research, bounded public-X research (xquik-x-research, via Xquik REST/MCP), live presales discovery and auditable ballpark estimates (presales-with-docs), independent cross-model review through Claude Code (claude-code-review), teaching + polished course production (teach-enhance), and Open Knowledge Format (OKF) knowledge bases (scaffold, ingest, query, lint)."
+      "description": "Portable agent skills for engineering, research, teaching, and knowledge-base workflows."
     }
   ]
 }
