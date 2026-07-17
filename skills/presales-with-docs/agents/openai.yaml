@@ -1,0 +1,4 @@
+interface:
+  display_name: "Presales with Docs"
+  short_description: "Live discovery to auditable ballpark ROM"
+  default_prompt: "Use $presales-with-docs to run client discovery one question at a time and prepare a reviewable ballpark."

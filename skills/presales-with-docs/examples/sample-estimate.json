@@ -1,0 +1,147 @@
+{
+  "project": {
+    "client": "Example Client",
+    "name": "Service Request Portal",
+    "estimate_date": "2026-07-17",
+    "currency": "HKD",
+    "validity_days": 30
+  },
+  "discovery": {
+    "outcome": "Reduce manual service-request handling and provide status visibility.",
+    "scope_in": [
+      "Responsive request portal",
+      "Two-step approval workflow",
+      "Operations dashboard",
+      "Corporate SSO integration"
+    ],
+    "scope_out": [
+      "Historical data cleansing",
+      "24x7 production support",
+      "Third-party license fees not listed below"
+    ],
+    "assumptions": [
+      "Client supplies SSO documentation and a test tenant before build starts.",
+      "Migration is limited to one clean CSV export.",
+      "English is the only launch language."
+    ],
+    "unresolved": [
+      "Final dashboard KPI definitions will be confirmed during detailed discovery."
+    ],
+    "blocking_unknowns": [],
+    "confidence": {
+      "level": "medium",
+      "rationale": "Core workflow and integrations are bounded; dashboard detail remains open."
+    }
+  },
+  "rate_card": {
+    "source": "Synthetic FY2026 approved rate card",
+    "effective_date": "2026-01-01",
+    "roles": {
+      "ba": 6000,
+      "solution_architect": 8000,
+      "developer": 5500,
+      "qa": 4500,
+      "pm": 7000
+    }
+  },
+  "services": [
+    {
+      "work_item": "Requirements and process design",
+      "role": "ba",
+      "low_days": 5,
+      "high_days": 8,
+      "basis": "Three user groups and one primary workflow."
+    },
+    {
+      "work_item": "Architecture and integration design",
+      "role": "solution_architect",
+      "low_days": 4,
+      "high_days": 6,
+      "basis": "One SSO integration and standard managed-cloud deployment."
+    },
+    {
+      "work_item": "Portal, workflow, dashboard, and SSO build",
+      "role": "developer",
+      "low_days": 20,
+      "high_days": 30,
+      "basis": "Responsive portal, two-step workflow, dashboard, and one documented integration."
+    },
+    {
+      "work_item": "System and acceptance-test support",
+      "role": "qa",
+      "low_days": 6,
+      "high_days": 10,
+      "basis": "One browser matrix and one formal UAT cycle."
+    },
+    {
+      "work_item": "Project management and handover",
+      "role": "pm",
+      "low_days": 4,
+      "high_days": 6,
+      "basis": "Weekly governance through a 10–14 week delivery window."
+    }
+  ],
+  "one_time": [
+    {
+      "category": "cloud setup",
+      "label": "Landing zone and production setup",
+      "low": 10000,
+      "high": 15000,
+      "contingency_eligible": true,
+      "source": "Synthetic cloud setup catalog",
+      "as_of": "2026-07-01"
+    },
+    {
+      "category": "hardware",
+      "label": "Office authentication appliance",
+      "low": 20000,
+      "high": 25000,
+      "contingency_eligible": false,
+      "source": "Synthetic vendor budgetary quote",
+      "as_of": "2026-07-10"
+    }
+  ],
+  "recurring": [
+    {
+      "category": "cloud",
+      "label": "Production cloud services",
+      "period": "monthly",
+      "low": 4000,
+      "high": 7000,
+      "source": "Synthetic cloud pricing calculator",
+      "as_of": "2026-07-15"
+    },
+    {
+      "category": "BAU",
+      "label": "Business-hours monitoring and support",
+      "period": "monthly",
+      "low": 8000,
+      "high": 12000,
+      "source": "Synthetic managed-service catalog",
+      "as_of": "2026-07-01"
+    }
+  ],
+  "contingency": {
+    "low_pct": 10,
+    "high_pct": 20
+  },
+  "commercial": {
+    "discount_pct": 0,
+    "tax_pct": 0
+  },
+  "timeline": {
+    "low_weeks": 10,
+    "high_weeks": 14,
+    "basis": "Two-person build team with sequential design, build, UAT, and handover.",
+    "milestones": [
+      "Requirements baseline",
+      "Working portal demonstration",
+      "UAT release",
+      "Production handover"
+    ]
+  },
+  "presentation": {
+    "effort_round_to": 1,
+    "money_round_to": 1000
+  }
+}
