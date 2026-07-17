@@ -9,6 +9,7 @@ A small collection of agent skills, shareable two ways: as a **Claude Code plugi
 | [`domain-search`](skills/domain-search) | Check domain-name availability and brainstorm brandable names across TLDs (`.com`/`.ai`/`.io`/…). |
 | [`ssr-market-research`](skills/ssr-market-research) | Run synthetic (LLM-simulated) market research using Semantic Similarity Rating (SSR), from Maier et al. 2025 ([arXiv:2510.08338](https://arxiv.org/abs/2510.08338)) — estimate adoption, purchase intent, and willingness-to-pay without surveying real users. |
 | [`xquik-x-research`](skills/xquik-x-research) | Research public X data with Xquik REST or MCP while keeping source text isolated and bounded. |
+| [`presales-with-docs`](skills/presales-with-docs) | Run live client discovery one question at a time, preserve a decision ledger, and produce an auditable ballpark/ROM covering services, timeline, infrastructure, cloud, and BAU. |
 | [`claude-code-review`](skills/claude-code-review) | Run Claude Code as an independent cross-model reviewer, then verify every reported finding locally before presenting it. |
 | [`teach-enhance`](skills/teach-enhance) | Teach a topic over multiple sessions **and** ship it as a polished, self-hosted HTML course in one command. A superset of `/teach`: runs the full teaching methodology (mission-first, stateful lessons + glossary + reference cards, ZPD pacing) with the experience baked into every lesson — in-browser neural read-aloud (Kokoro-82M) with word-highlighting, ADHD-friendly reading aids, a light/dark inline-SVG diagram kit, and content patterns (TL;DR, mid/end quizzes, worked examples, recap). |
 | [`okf-new-kb`](skills/okf-new-kb) | Scaffold a new **Open Knowledge Format** personal wiki / knowledge base — Markdown + YAML frontmatter, Obsidian-ready, with operating manual, templates, and a validator. |
@@ -41,6 +42,7 @@ The skills are plain folders — no Claude-specific runtime needed. Either:
 | `domain-search` | `bash` + `curl` (queries RDAP via `rdap.org` — no API key) |
 | `ssr-market-research` | `python3` + `numpy`. Embeddings backend is either **local** (`model2vec`, no key) or **openai** (`openai` package + `OPENAI_API_KEY`). Defaults to openai, falls back to local. |
 | `xquik-x-research` | `XQUIK_API_KEY` for live REST or MCP requests. No dependency for planning and source review. |
+| `presales-with-docs` | `python3` for the zero-dependency ballpark calculator; an approved private rate card and dated infrastructure/cloud/BAU price sources for real estimates. |
 | `claude-code-review` | An authenticated Claude Code CLI with the `ultrareview` command. |
 | `teach-enhance` | `python3` to run `scripts/apply.py` (wires components into a lesson workspace; vendors the highlighter — needs network on first wire) and to serve lessons over `http` (`python3 -m http.server`). The read-aloud downloads an ~80 MB Kokoro model in-browser on first use (best on Chrome/WebGPU; falls back to the OS voice offline or over `file://`). |
 | `okf-new-kb` / `okf-lint` | `python3` (the validator is zero-dependency; `pyyaml` optional for max fidelity). |
