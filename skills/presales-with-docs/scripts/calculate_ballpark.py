@@ -4,12 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 from typing import Any
+
+
+SNAPSHOT_VERSION = "presales-rate-card-snapshot/v1"
 
 
 class EstimateError(ValueError):
@@ -124,7 +128,109 @@ def load_input(path: Path) -> dict[str, Any]:
         raise EstimateError(f"invalid JSON in {path}: {exc}") from exc
 
 
-def calculate(data: dict[str, Any], approved_by: str | None = None) -> dict[str, Any]:
+def rate_card_snapshot_checksum(source: dict[str, Any], rate_card: dict[str, Any]) -> str:
+    checksum_input = json.dumps(
+        _json_safe({"source": source, "rate_card": rate_card}),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(checksum_input).hexdigest()
+
+
+def _snapshot_rate_card(
+    snapshot: Any,
+    rate_mapping_raw: Any,
+    *,
+    estimate_date: date,
+    project_currency: str,
+) -> dict[str, Any]:
+    root = _mapping(snapshot, "rate-card snapshot")
+    if root.get("schema_version") != SNAPSHOT_VERSION:
+        raise EstimateError("rate-card snapshot has an unsupported schema_version")
+    source = _mapping(root.get("source"), "rate-card snapshot.source")
+    card = _mapping(root.get("rate_card"), "rate-card snapshot.rate_card")
+    checksum = _text(root.get("checksum"), "rate-card snapshot.checksum")
+    if not checksum.startswith("sha256:") or len(checksum) != 71:
+        raise EstimateError("rate-card snapshot.checksum must be a sha256 digest")
+    actual_checksum = rate_card_snapshot_checksum(source, card)
+    if checksum != actual_checksum:
+        raise EstimateError("rate-card snapshot checksum does not match its contents")
+    currency = _text(card.get("currency"), "rate-card snapshot.rate_card.currency")
+    if currency != project_currency:
+        raise EstimateError(
+            f"rate-card snapshot currency {currency} does not match project.currency {project_currency}"
+        )
+    status = _text(card.get("status"), "rate-card snapshot.rate_card.status")
+    if status.casefold() != "approved":
+        raise EstimateError("rate-card snapshot must be approved")
+    effective_from = _iso_date(
+        card.get("effective_from"), "rate-card snapshot.rate_card.effective_from"
+    )
+    effective_until_raw = card.get("effective_until")
+    effective_until = (
+        _iso_date(effective_until_raw, "rate-card snapshot.rate_card.effective_until")
+        if effective_until_raw is not None
+        else None
+    )
+    if effective_from > estimate_date or (
+        effective_until is not None and effective_until < estimate_date
+    ):
+        raise EstimateError("rate-card snapshot is not effective on project.estimate_date")
+    as_of = _iso_date(source.get("as_of"), "rate-card snapshot.source.as_of")
+    if as_of > estimate_date:
+        raise EstimateError("rate-card snapshot.source.as_of cannot be after project.estimate_date")
+
+    indexed_rates: dict[str, Decimal] = {}
+    for index, raw in enumerate(_items(card.get("rates"), "rate-card snapshot.rate_card.rates")):
+        path = f"rate-card snapshot.rate_card.rates[{index}]"
+        row = _mapping(raw, path)
+        rate_key = _text(row.get("rate_key"), f"{path}.rate_key")
+        if rate_key in indexed_rates:
+            raise EstimateError(f"duplicate rate-card snapshot rate_key '{rate_key}'")
+        indexed_rates[rate_key] = _decimal(row.get("day_rate"), f"{path}.day_rate", positive=True)
+    if not indexed_rates:
+        raise EstimateError("rate-card snapshot.rate_card.rates must contain at least one rate")
+
+    rate_mapping = _mapping(rate_mapping_raw, "rate_mapping")
+    if not rate_mapping:
+        raise EstimateError("rate_mapping must contain at least one role")
+    roles: dict[str, Decimal] = {}
+    normalized_mapping: dict[str, str] = {}
+    for raw_role, raw_rate_key in rate_mapping.items():
+        role = _text(raw_role, "rate_mapping key")
+        rate_key = _text(raw_rate_key, f"rate_mapping.{role}")
+        if rate_key not in indexed_rates:
+            raise EstimateError(f"rate_mapping.{role} references absent rate_key '{rate_key}'")
+        roles[role] = indexed_rates[rate_key]
+        normalized_mapping[role] = rate_key
+
+    version = _text(card.get("version"), "rate-card snapshot.rate_card.version")
+    card_id = _text(card.get("card_id"), "rate-card snapshot.rate_card.card_id")
+    family = _text(card.get("family"), "rate-card snapshot.rate_card.family")
+    data_source_id = _text(
+        source.get("data_source_id"), "rate-card snapshot.source.data_source_id"
+    )
+    return {
+        "source": f"Notion rate card {card_id} {version} {family} ({data_source_id})",
+        "effective_date": effective_from.isoformat(),
+        "roles": roles,
+        "rate_mapping": normalized_mapping,
+        "snapshot_checksum": checksum,
+        "snapshot_source": source,
+        "version": version,
+        "card_id": card_id,
+        "family": family,
+        "currency": currency,
+        "effective_until": effective_until.isoformat() if effective_until else None,
+    }
+
+
+def calculate(
+    data: dict[str, Any],
+    approved_by: str | None = None,
+    rate_card_snapshot: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     root = _mapping(data, "input")
 
     project_raw = _mapping(root.get("project"), "project")
@@ -160,22 +266,33 @@ def calculate(data: dict[str, Any], approved_by: str | None = None) -> dict[str,
         },
     }
 
-    rate_raw = _mapping(root.get("rate_card"), "rate_card")
-    roles_raw = _mapping(rate_raw.get("roles"), "rate_card.roles")
-    if not roles_raw:
-        raise EstimateError("rate_card.roles must contain at least one role")
-    roles: dict[str, Decimal] = {}
-    for role, raw_rate in roles_raw.items():
-        role_key = _text(role, "rate_card.roles key")
-        roles[role_key] = _decimal(raw_rate, f"rate_card.roles.{role_key}", positive=True)
-    rate_effective_date = _iso_date(rate_raw.get("effective_date"), "rate_card.effective_date")
-    if rate_effective_date > estimate_date:
-        raise EstimateError("rate_card.effective_date cannot be after project.estimate_date")
-    rate_card = {
-        "source": _text(rate_raw.get("source"), "rate_card.source"),
-        "effective_date": rate_effective_date.isoformat(),
-        "roles": roles,
-    }
+    if rate_card_snapshot is not None:
+        if root.get("rate_card") is not None:
+            raise EstimateError("use either inline rate_card or --rate-card-snapshot, not both")
+        rate_card = _snapshot_rate_card(
+            rate_card_snapshot,
+            root.get("rate_mapping"),
+            estimate_date=estimate_date,
+            project_currency=project["currency"],
+        )
+        roles = rate_card["roles"]
+    else:
+        rate_raw = _mapping(root.get("rate_card"), "rate_card")
+        roles_raw = _mapping(rate_raw.get("roles"), "rate_card.roles")
+        if not roles_raw:
+            raise EstimateError("rate_card.roles must contain at least one role")
+        roles = {}
+        for role, raw_rate in roles_raw.items():
+            role_key = _text(role, "rate_card.roles key")
+            roles[role_key] = _decimal(raw_rate, f"rate_card.roles.{role_key}", positive=True)
+        rate_effective_date = _iso_date(rate_raw.get("effective_date"), "rate_card.effective_date")
+        if rate_effective_date > estimate_date:
+            raise EstimateError("rate_card.effective_date cannot be after project.estimate_date")
+        rate_card = {
+            "source": _text(rate_raw.get("source"), "rate_card.source"),
+            "effective_date": rate_effective_date.isoformat(),
+            "roles": roles,
+        }
 
     service_rows = _items(root.get("services"), "services")
     if not service_rows:
@@ -452,6 +569,13 @@ def render_internal(result: dict[str, Any]) -> str:
         or "- None estimated"
     )
 
+    snapshot_provenance = ""
+    if result["rate_card"].get("snapshot_checksum"):
+        snapshot_provenance = (
+            f"\nRate-card snapshot checksum: `{result['rate_card']['snapshot_checksum']}`; "
+            f"version **{result['rate_card']['version']}**, family **{result['rate_card']['family']}**.\n"
+        )
+
     return f"""# {project['name']} — internal ballpark
 
 **PRIVATE — INTERNAL RATE AND COST DATA**  
@@ -477,6 +601,7 @@ def render_internal(result: dict[str, Any]) -> str:
 {chr(10).join(service_rows)}
 
 Rate-card source: **{result['rate_card']['source']}**, effective {result['rate_card']['effective_date']}.
+{snapshot_provenance}
 
 ## One-time non-service costs
 
@@ -621,10 +746,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("input", type=Path, help="estimate JSON input")
     parser.add_argument("--output-dir", type=Path, help="artifact directory; defaults beside input")
     parser.add_argument("--approved-by", help="human reviewer who approved client discussion")
+    parser.add_argument(
+        "--rate-card-snapshot",
+        type=Path,
+        help="private snapshot produced by load_notion_rate_card.py; conflicts with inline rate_card",
+    )
     args = parser.parse_args(argv)
 
     try:
-        result = calculate(load_input(args.input), args.approved_by)
+        snapshot = load_input(args.rate_card_snapshot) if args.rate_card_snapshot else None
+        result = calculate(load_input(args.input), args.approved_by, snapshot)
         output_dir = args.output_dir or args.input.with_name(f"{args.input.stem}-output")
         paths = write_outputs(result, output_dir)
     except EstimateError as exc:

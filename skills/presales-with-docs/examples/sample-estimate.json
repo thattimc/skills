@@ -3,7 +3,7 @@
     "client": "Example Client",
     "name": "Service Request Portal",
     "estimate_date": "2026-07-17",
-    "currency": "HKD",
+    "currency": "USD",
     "validity_days": 30
   },
   "discovery": {

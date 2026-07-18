@@ -4,7 +4,8 @@ description: >
   Run live presales discovery one question at a time, preserve a decision ledger, and
   produce an auditable ballpark/ROM for services, infrastructure, timeline, and BAU.
   Use when a presales operator is scoping a client project, qualifying requirements,
-  estimating man-days, or preparing an indicative cost for client discussion.
+  estimating man-days, loading an approved rate card from Notion, or preparing an
+  indicative cost for client discussion.
 ---
 
 # Presales with Docs
@@ -44,10 +45,14 @@ The presales operator owns the meeting and every commercial approval.
 ## Ballpark
 
 5. Read [references/estimate-input.md](references/estimate-input.md). Build the JSON input
-   from the approved basis and controlled sources. Use approved day rates and dated vendor
-   or cloud figures. Keep private rates and role math out of client-visible conversation.
+   from the approved basis and controlled sources. For a Notion-backed rate card, also read
+   [references/notion-rate-card.md](references/notion-rate-card.md), load an approved/effective card
+   into a private snapshot, and map every estimate role to one composite rate key. Use the
+   inline rate card only as the documented fallback. Keep tokens, private rates, snapshots,
+   and role math out of client-visible conversation.
    **Complete when:** every service line has role, day range, rate-card match, and basis;
-   every external cost has source and as-of date; timeline has a stated basis.
+   snapshot provenance verifies when used; every external cost has source and as-of date;
+   timeline has a stated basis.
 
 6. Run the deterministic calculator in draft mode:
 
@@ -55,6 +60,10 @@ The presales operator owns the meeting and every commercial approval.
    python3 "<this skill dir>/scripts/calculate_ballpark.py" estimate.json \
      --output-dir ./ballpark-output
    ```
+
+   When step 5 produced a Notion snapshot, add
+   `--rate-card-snapshot ./private/rate-card-snapshot.json`. Never run the loader in a
+   client-visible terminal.
 
    Validation errors return to the discovery loop. Review `internal-estimate.md` privately;
    the client artifact contains totals but no day rates.
@@ -81,6 +90,8 @@ The presales operator owns the meeting and every commercial approval.
 - Critical unknowns stay in `blocking_unknowns`; the calculator refuses an estimate.
 - Services, one-time infrastructure, and recurring cloud/BAU remain separate totals.
 - Keep private rates, margins, discounts, and role-level math in internal artifacts.
+- Fetch Notion rates through the read-only deterministic loader, not through model context.
+- Reject changed snapshots, ambiguous active versions, mixed currency, and missing mappings.
 - The calculator performs arithmetic; the model performs discovery and decomposition.
 
 For a complete synthetic run, read [examples/sample-session.md](examples/sample-session.md)
