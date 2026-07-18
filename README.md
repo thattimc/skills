@@ -59,7 +59,7 @@ The skills are plain folders — no Claude-specific runtime needed. Either:
 | `domain-search` | `bash` + `curl` (queries RDAP via `rdap.org` — no API key) |
 | `ssr-market-research` | `python3` + `numpy`. Embeddings backend is either **local** (`model2vec`, no key) or **openai** (`openai` package + `OPENAI_API_KEY`). Defaults to openai, falls back to local. |
 | `xquik-x-research` | `XQUIK_API_KEY` for live REST or MCP requests. No dependency for planning and source review. |
-| `presales-with-docs` | `python3` for the zero-dependency ballpark calculator; an approved private rate card and dated infrastructure/cloud/BAU price sources for real estimates. |
+| `presales-with-docs` | `python3` for zero-dependency Notion rate-card loading and ballpark calculation; `NOTION_TOKEN` plus a shared read-only data source for live rates. Inline approved rates remain a fallback. |
 | `claude-code-review` | An authenticated Claude Code CLI with the `ultrareview` command. |
 | `teach-enhance` | `python3` to run `scripts/apply.py` (wires components into a lesson workspace; vendors the highlighter — needs network on first wire) and to serve lessons over `http` (`python3 -m http.server`). The read-aloud downloads an ~80 MB Kokoro model in-browser on first use (best on Chrome/WebGPU; falls back to the OS voice offline or over `file://`). |
 | `okf-new-kb` / `okf-lint` | `python3` (the validator is zero-dependency; `pyyaml` optional for max fidelity). |

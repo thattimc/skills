@@ -9,6 +9,8 @@ validation. The calculator uses Python's decimal arithmetic and has no third-par
 python3 "<this skill dir>/scripts/calculate_ballpark.py" estimate.json --output-dir ./ballpark-output
 python3 "<this skill dir>/scripts/calculate_ballpark.py" estimate.json --output-dir ./ballpark-output \
   --approved-by "Reviewer name"
+python3 "<this skill dir>/scripts/calculate_ballpark.py" estimate.json --output-dir ./ballpark-output \
+  --rate-card-snapshot ./private/rate-card-snapshot.json
 ```
 
 Default output is a draft. `--approved-by` records explicit human approval and removes the
@@ -50,8 +52,13 @@ synthetic input.
 
 ### `rate_card`
 
+Use one rate-card mode. Supplying both fails closed.
+
+#### Inline fallback
+
 `source` and `effective_date` identify the approved rate card. `roles` maps stable role keys
-to positive day rates. Only `internal-estimate.md` shows them.
+to positive day rates. Only `internal-estimate.md` shows them. Keep this mode for controlled
+offline use and backward compatibility.
 
 ```json
 {
@@ -60,6 +67,25 @@ to positive day rates. Only `internal-estimate.md` shows them.
   "roles": { "ba": 6000, "sa": 8000, "developer": 5500 }
 }
 ```
+
+#### Notion rate-card snapshot
+
+Omit `rate_card`, add `rate_mapping`, and pass `--rate-card-snapshot`. Map each role used by
+`services` to the exact composite key printed by `load_notion_rate_card.py` in its private JSON:
+
+```json
+{
+  "rate_mapping": {
+    "developer": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 2|Engineering|Remote|USD",
+    "pm": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 4|Delivery Management|Remote|USD"
+  }
+}
+```
+
+The calculator verifies the snapshot checksum, approval status, effective dates, currency,
+unique rate keys, positive rates, and every referenced mapping. It records rates and Notion
+provenance only in private artifacts. Read [notion-rate-card.md](notion-rate-card.md) for setup and
+loader commands.
 
 ### `services`
 

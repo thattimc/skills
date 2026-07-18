@@ -103,10 +103,10 @@ The calculator writes private internal math and a draft client artifact.
 ## Result
 
 - Professional-services effort: **39–60 man-days**
-- Professional services: **HKD 250,000–418,000**
-- One-time infrastructure/hardware: **HKD 31,000–43,000**
-- Initial investment: **HKD 281,000–461,000**
-- Recurring cloud and BAU: **HKD 12,000–19,000 monthly**
+- Professional services: **USD 250,000–418,000**
+- One-time infrastructure/hardware: **USD 31,000–43,000**
+- Initial investment: **USD 281,000–461,000**
+- Recurring cloud and BAU: **USD 12,000–19,000 monthly**
 - Indicative delivery: **10–14 weeks**
 - Confidence: **Medium**
 - Validity: **30 days**

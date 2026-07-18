@@ -1,0 +1,3 @@
+Name,Rate Card ID,Rate Card Version,Rate Family,Band or Category,Service Stream,Delivery Location,Currency,Day Rate,Effective From,Effective Until,Status,Approved By,Approval Date
+Synthetic Level 2 Engineering,EXAMPLE-SERVICES-USD,2026.1,Services,Level 2,Engineering,Remote,USD,480,2026-01-01,2026-12-31,Approved,Synthetic Reviewer,2025-12-15
+Synthetic Level 4 Delivery,EXAMPLE-SERVICES-USD,2026.1,Services,Level 4,Delivery Management,Remote,USD,720,2026-01-01,2026-12-31,Approved,Synthetic Reviewer,2025-12-15
