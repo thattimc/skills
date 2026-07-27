@@ -1,0 +1,31 @@
+{
+  "schema_version": "presales-rate-card-snapshot/v1",
+  "source": {
+    "provider": "notion",
+    "data_source_id": "synthetic-data-source",
+    "api_version": "2026-03-11",
+    "as_of": "2026-07-17",
+    "retrieved_at": "2026-07-17T09:00:00Z",
+    "page_ids": ["synthetic-ba", "synthetic-sa", "synthetic-dev", "synthetic-qa", "synthetic-pm"],
+    "last_edited_time": "2026-07-16T09:00:00Z"
+  },
+  "rate_card": {
+    "card_id": "EXAMPLE-SERVICES-USD",
+    "version": "2026.1",
+    "family": "Services",
+    "currency": "USD",
+    "effective_from": "2026-01-01",
+    "effective_until": "2026-12-31",
+    "status": "Approved",
+    "approval_date": "2026-03-28",
+    "approved_by": [{"id": "synthetic-reviewer", "name": "Synthetic Reviewer"}],
+    "rates": [
+      {"rate_key": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 1|Quality Assurance|Remote|USD", "band_or_category": "Level 1", "service_stream": "Quality Assurance", "delivery_location": "Remote", "day_rate": "4500", "source_page_id": "synthetic-qa", "last_edited_time": "2026-07-16T09:00:00Z"},
+      {"rate_key": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 2|Engineering|Remote|USD", "band_or_category": "Level 2", "service_stream": "Engineering", "delivery_location": "Remote", "day_rate": "5500", "source_page_id": "synthetic-dev", "last_edited_time": "2026-07-16T09:00:00Z"},
+      {"rate_key": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 3|Business Analysis|Remote|USD", "band_or_category": "Level 3", "service_stream": "Business Analysis", "delivery_location": "Remote", "day_rate": "6000", "source_page_id": "synthetic-ba", "last_edited_time": "2026-07-16T09:00:00Z"},
+      {"rate_key": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 4|Delivery Management|Remote|USD", "band_or_category": "Level 4", "service_stream": "Delivery Management", "delivery_location": "Remote", "day_rate": "7000", "source_page_id": "synthetic-pm", "last_edited_time": "2026-07-16T09:00:00Z"},
+      {"rate_key": "EXAMPLE-SERVICES-USD|2026.1|Services|Level 4|Architecture|Remote|USD", "band_or_category": "Level 4", "service_stream": "Architecture", "delivery_location": "Remote", "day_rate": "8000", "source_page_id": "synthetic-sa", "last_edited_time": "2026-07-16T09:00:00Z"}
+    ]
+  },
+  "checksum": "sha256:3138132961f7c3072ba33b89cae8df0bee4a9547364bc04ae52786e17b8d7095"
+}

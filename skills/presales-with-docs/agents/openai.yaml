@@ -1,0 +1,4 @@
+interface:
+  display_name: "Presales with Docs"
+  short_description: "Live discovery with governed rate-card ROMs"
+  default_prompt: "Use $presales-with-docs to run client discovery and prepare an auditable ROM from an approved rate card."

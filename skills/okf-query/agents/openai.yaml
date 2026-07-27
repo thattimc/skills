@@ -1,0 +1,3 @@
+interface:
+  display_name: "OKF Query"
+  short_description: "Answer questions from an OKF knowledge base"

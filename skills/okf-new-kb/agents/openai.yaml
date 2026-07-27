@@ -1,0 +1,3 @@
+interface:
+  display_name: "New OKF Knowledge Base"
+  short_description: "Create an agent-managed, Obsidian-ready wiki"
