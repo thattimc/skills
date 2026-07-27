@@ -7,6 +7,9 @@
 #   HTTP 200 => registration exists      => TAKEN
 #   other    => TLD has no RDAP / rate-limited / network => UNKNOWN (verify manually)
 #
+# Transient failures (429, 5xx, network) are retried up to 3x with backoff before UNKNOWN,
+# and queries are throttled (RDAP_THROTTLE seconds, default 0.2) since rdap.org limits bursts.
+#
 # Usage:
 #   check-domains.sh acme.com acme.ai foo.io          # explicit FQDNs
 #   check-domains.sh --tlds com,ai,io acme foo bar     # names x TLDs
@@ -22,6 +25,7 @@ set -u
 
 JSON=0
 TLDS=""
+THROTTLE="${RDAP_THROTTLE:-0.2}"   # pause between domains; rdap.org throttles bursts
 ARGS=()
 
 while [ $# -gt 0 ]; do
@@ -29,7 +33,7 @@ while [ $# -gt 0 ]; do
     --json) JSON=1; shift ;;
     --tlds) TLDS="$2"; shift 2 ;;
     --tlds=*) TLDS="${1#*=}"; shift ;;
-    -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,22p' "$0"; exit 0 ;;
     *) ARGS+=("$1"); shift ;;
   esac
 done
@@ -55,13 +59,19 @@ fi
 
 rdap_status() {
   # echoes: AVAILABLE | TAKEN | UNKNOWN
-  local d="$1" code
-  code=$(curl -sL --max-time 12 -o /dev/null -w "%{http_code}" "https://rdap.org/domain/${d}" 2>/dev/null)
-  case "$code" in
-    404) echo "AVAILABLE" ;;
-    200) echo "TAKEN" ;;
-    *)   echo "UNKNOWN" ;;
-  esac
+  # rdap.org rate-limits bursts; a transient 429/5xx/timeout must not be reported as UNKNOWN,
+  # because UNKNOWN reads as "verify manually" and silently hides real answers in a batch.
+  local d="$1" code attempt
+  for attempt in 1 2 3; do
+    code=$(curl -sL --max-time 12 -o /dev/null -w "%{http_code}" "https://rdap.org/domain/${d}" 2>/dev/null)
+    case "$code" in
+      404)          echo "AVAILABLE"; return ;;
+      200)          echo "TAKEN"; return ;;
+      429|5*|000)   sleep $((attempt * 2)) ;;   # rate-limited / server error / network: back off
+      *)            break ;;                    # genuine "no RDAP for this TLD": stop early
+    esac
+  done
+  echo "UNKNOWN"
 }
 
 if [ "$JSON" -eq 1 ]; then
@@ -71,6 +81,7 @@ if [ "$JSON" -eq 1 ]; then
     s=$(rdap_status "$d")
     [ $first -eq 1 ] && first=0 || printf ','
     printf '{"domain":"%s","status":"%s"}' "$d" "$s"
+    sleep "$THROTTLE"
   done
   printf ']\n'
 else
@@ -81,5 +92,6 @@ else
       TAKEN)     printf '  \xE2\x9D\x8C %-28s taken\n' "$d" ;;
       *)         printf '  \xE2\x9D\x93 %-28s unknown (no RDAP / verify manually)\n' "$d" ;;
     esac
+    sleep "$THROTTLE"
   done
 fi

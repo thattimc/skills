@@ -19,7 +19,11 @@ Query `https://rdap.org/domain/<fqdn>`, which routes to the responsible registry
 
 - **HTTP 404 → AVAILABLE** (no registration record exists)
 - **HTTP 200 → TAKEN** (a registration record exists)
-- **anything else → UNKNOWN** (TLD has no RDAP server, rate-limited, or network issue)
+- **anything else → UNKNOWN** (TLD has no RDAP server)
+
+rdap.org throttles bursts, so the script retries `429`/`5xx`/network failures up to 3× with
+backoff and pauses ~0.2s between domains (`RDAP_THROTTLE` env var). Without that, transient
+rate-limiting shows up as `UNKNOWN` and quietly hides real answers in a large batch.
 
 This is authoritative and free. It is more reliable than scraping Instant Domain Search /
 GoDaddy, whose public endpoints change and rate-limit. RDAP tells you *registered or not*; it
