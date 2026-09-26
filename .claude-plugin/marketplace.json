@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Tim's shared Claude Code skills.",
-    "version": "0.7.1"
+    "version": "0.8.0"
   },
   "plugins": [
     {

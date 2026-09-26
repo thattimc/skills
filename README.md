@@ -56,7 +56,7 @@ The skills are plain folders — no Claude-specific runtime needed. Either:
 
 | Skill | Needs |
 |-------|-------|
-| `domain-search` | `bash` + `curl` (queries RDAP via `rdap.org` — no API key) |
+| `domain-search` | `python3` (standard library only; asks registry RDAP/WHOIS directly, no API key). Optional: the free Instant Domain Search MCP server for premium prices and for-sale listings. |
 | `ssr-market-research` | `python3` + `numpy`. Embeddings backend is either **local** (`model2vec`, no key) or **openai** (`openai` package + `OPENAI_API_KEY`). Defaults to openai, falls back to local. |
 | `xquik-x-research` | `XQUIK_API_KEY` for live REST or MCP requests. No dependency for planning and source review. |
 | `presales-with-docs` | `python3` for zero-dependency Notion rate-card loading and ballpark calculation; `NOTION_TOKEN` plus a shared read-only data source for live rates. Inline approved rates remain a fallback. |
